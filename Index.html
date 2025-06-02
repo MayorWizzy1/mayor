@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mayor Wizzy | Elite Crypto Vendor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              inter: ["Inter", "sans-serif"],
+            },
+            animation: {
+              gradient: "gradient 3s ease-in-out infinite",
+              float: "float 3s ease-in-out infinite",
+              "pulse-glow": "pulse-glow 2s ease-in-out infinite alternate",
+              "slide-up": "slide-up 0.8s ease-out",
+              "fade-in": "fade-in 1s ease-out",
+              "rotate-slow": "rotate-slow 20s linear infinite",
+              shimmer: "shimmer 2s linear infinite",
+            },
+            backgroundImage: {
+              "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+              "gradient-conic":
+                "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      @keyframes gradient {
+        0%,
+        100% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      @keyframes pulse-glow {
+        0% {
+          box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+        }
+        100% {
+          box-shadow: 0 0 40px rgba(59, 130, 246, 0.6),
+            0 0 60px rgba(59, 130, 246, 0.4);
+        }
+      }
+
+      @keyframes slide-up {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fade-in {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes rotate-slow {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes shimmer {
+        0% {
+          transform: translateX(-100%);
+        }
+        100% {
+          transform: translateX(100%);
+        }
+      }
+
+      .gradient-text {
+        background: linear-gradient(45deg, #60a5fa, #3b82f6, #1d4ed8, #60a5fa);
+        background-size: 400% 400%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: gradient 3s ease-in-out infinite;
+      }
+
+      .glass-effect {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .hover-glow:hover {
+        box-shadow: 0 20px 40px rgba(59, 130, 246, 0.4);
+        transform: translateY(-5px) scale(1.02);
+      }
+
+      .shimmer-effect {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .shimmer-effect::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        animation: shimmer 2s infinite;
+      }
+
+      body {
+        cursor: none;
+      }
+
+      .cursor {
+        position: fixed;
+        width: 20px;
+        height: 20px;
+        background: radial-gradient(circle, #60a5fa, #3b82f6);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        mix-blend-mode: difference;
+        transition: transform 0.1s ease;
+      }
+
+      .testimonial-card {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .testimonial-card:hover {
+        transform: translateY(-10px) rotateX(5deg);
+      }
+
+      .parallax {
+        transform: translateZ(0);
+      }
+
+      .crypto-icon {
+        background: linear-gradient(135deg, #60a5fa, #3b82f6);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .slider-container {
+        overflow: hidden;
+      }
+      .slider-track {
+        display: flex;
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .slide {
+        flex: 0 0 100%;
+        position: relative;
+      }
+      @media (min-width: 768px) {
+        .slide {
+          flex: 0 0 50%;
+        }
+      }
+      @media (min-width: 1024px) {
+        .slide {
+          flex: 0 0 33.333333%;
+        }
+      }
+      .slide img {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .slide:hover img {
+        transform: scale(1.02);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      }
+      .nav-dot {
+        transition: all 0.3s ease;
+      }
+      .nav-dot.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+      .nav-arrow {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+      }
+      .nav-arrow:hover {
+        background: rgba(255, 255, 255, 1);
+        transform: translateY(-2px);
+      }
+    </style>
+  </head>
+
+  <body class="bg-black text-white font-inter overflow-x-hidden">
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+
+    <!-- 3D Background Canvas -->
+    <canvas id="bg-canvas" class="fixed top-0 left-0 -z-10"></canvas>
+
+    <!-- Scroll Progress -->
+    <div class="fixed top-0 left-0 w-full h-1 bg-white/10 z-50">
+      <div
+        id="scroll-progress"
+        class="h-full bg-gradient-to-r from-blue-400 to-blue-600 w-0 transition-all duration-100"
+      ></div>
+    </div>
+
+    <!-- Hero Section -->
+    <section
+      class="min-h-screen flex flex-col justify-center items-center text-center relative overflow-hidden parallax"
+    >
+      <div
+        class="absolute inset-0 bg-gradient-radial from-blue-900/20 via-transparent to-transparent"
+      ></div>
+
+      <h1
+        class="text-6xl md:text-8xl lg:text-9xl font-black gradient-text mb-6 animate-slide-up"
+      >
+        MAYOR WIZZY
+      </h1>
+
+      <p
+        class="text-xl md:text-2xl lg:text-3xl text-white/80 mb-8 max-w-4xl animate-fade-in animation-delay-500"
+      >
+        Elite Crypto Vendor • Lightning Fast • Ultra Secure • Always Online
+      </p>
+
+      <a
+        href="https://wa.me/2349018177766" target="_blank"
+        class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-800 rounded-full text-xl font-semibold hover-glow transition-all duration-300 animate-float shimmer-effect group"
+      >
+        <span class="text-2xl">💬</span>
+        <span>Trade Now on WhatsApp</span>
+        <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+      </a>
+
+      <!-- Floating Elements -->
+      <div
+        class="absolute top-20 left-10 w-20 h-20 bg-blue-500/20 rounded-full animate-pulse-glow animation-delay-1000"
+      ></div>
+      <div
+        class="absolute bottom-20 right-10 w-16 h-16 bg-purple-500/20 rounded-full animate-pulse-glow animation-delay-2000"
+      ></div>
+      <div
+        class="absolute top-1/2 left-5 w-12 h-12 bg-cyan-500/20 rounded-full animate-pulse-glow animation-delay-3000"
+      ></div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="py-20 px-4 md:px-8 max-w-7xl mx-auto">
+      <h2
+        class="text-4xl md:text-5xl lg:text-6xl font-black text-center mb-16 gradient-text"
+      >
+        Premium Services
+      </h2>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div
+          class="glass-effect rounded-3xl p-8 hover-glow transition-all duration-300 group"
+        >
+          <div class="text-6xl mb-6 crypto-icon text-center">₿</div>
+          <h3 class="text-2xl font-bold text-blue-400 mb-4 text-center">
+            Bitcoin Trading
+          </h3>
+          <p class="text-white/70 text-center leading-relaxed">
+            Instant BTC transactions at competitive rates with zero delays. Your
+            gateway to digital gold.
+          </p>
+          <div class="mt-6 flex justify-center">
+            
+          </div>
+        </div>
+
+        <div
+          class="glass-effect rounded-3xl p-8 hover-glow transition-all duration-300 group"
+        >
+          <div class="text-6xl mb-6 crypto-icon text-center">Ξ</div>
+          <h3 class="text-2xl font-bold text-blue-400 mb-4 text-center">
+            Ethereum Exchange
+          </h3>
+          <p class="text-white/70 text-center leading-relaxed">
+            Seamless ETH trading available 24/7. Smart contracts meet smarter
+            trading.
+          </p>
+          <div class="mt-6 flex justify-center">
+            <div
+              class="px-4 py-2 bg-blue-500/20 rounded-full text-blue-400 text-sm font-semibold"
+            >
+              Lightning Fast
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="glass-effect rounded-3xl p-8 hover-glow transition-all duration-300 group md:col-span-2 lg:col-span-1"
+        >
+          <div class="text-6xl mb-6 crypto-icon text-center">💎</div>
+          <h3 class="text-2xl font-bold text-blue-400 mb-4 text-center">
+            Premium Altcoins
+          </h3>
+          <p class="text-white/70 text-center leading-relaxed">
+            USDT, BNB, and exclusive tokens. If it exists, we trade it. Premium
+            selection for elite traders.
+          </p>
+          <div class="mt-6 flex justify-center">
+            <div
+            
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section
+      class="py-20 px-4 md:px-8 bg-gradient-to-r from-blue-900/10 via-purple-900/10 to-blue-900/10"
+    >
+      <div class="max-w-6xl mx-auto">
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+          <div class="text-center group">
+            <div
+              class="text-4xl md:text-5xl lg:text-6xl font-black text-blue-400 mb-2 counter"
+              data-target="1000"
+            >
+              0
+            </div>
+            <div class="text-white/70 font-medium">Happy Clients</div>
+          </div>
+          <div class="text-center group">
+            <div
+              class="text-4xl md:text-5xl lg:text-6xl font-black text-blue-400 mb-2"
+            >
+              <span class="counter" data-target="10">0</span>M
+            </div>
+            <div class="text-white/70 font-medium">Total Traded</div>
+          </div>
+          <div class="text-center group">
+            <div
+              class="text-4xl md:text-5xl lg:text-6xl font-black text-blue-400 mb-2"
+            >
+              <span class="counter" data-target="99">0</span>%
+            </div>
+            <div class="text-white/70 font-medium">Success Rate</div>
+          </div>
+          <div class="text-center group">
+            <div
+              class="text-4xl md:text-5xl lg:text-6xl font-black text-blue-400 mb-2"
+            >
+              <span class="counter" data-target="24">0</span>/7
+            </div>
+            <div class="text-white/70 font-medium">Always Online</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+   <div class="relative">
+                <div class="slider-container rounded-2xl">
+                    <div class="slider-track" id="sliderTrack">
+                        <!-- Slide 1 -->
+                        <div class="slide px-3">
+                            <div class="bg-white rounded-xl shadow-lg overflow-hidden h-80">
+                                <img src="/images/img1.jpg" alt="Client testimonial screenshot" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+                        <!-- Slide 2 -->
+                        <div class="slide px-3">
+                            <div class="bg-white rounded-xl shadow-lg overflow-hidden h-80">
+                                <img src="/images/img2.jpg" alt="Client testimonial screenshot" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+                        <!-- Slide 3 -->
+                        <div class="slide px-3">
+                            <div class="bg-white rounded-xl shadow-lg overflow-hidden h-80">
+                                <img src="/images/img3.jpg" alt="Client testimonial screenshot" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+                        <!-- Slide 4 -->
+                        <div class="slide px-3">
+                            <div class="bg-white rounded-xl shadow-lg overflow-hidden h-80">
+                                <img src="/images/img4.jpg" alt="Client testimonial screenshot" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+                         <div class="slide px-3">
+                            <div class="bg-white rounded-xl shadow-lg overflow-hidden h-80">
+                                <img src="/images/img5.jpg" alt="Client testimonial screenshot" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+                        <div class="slide px-3">
+                            <div class="bg-white rounded-xl shadow-lg overflow-hidden h-80">
+                                <img src="/images/img6.jpg" alt="Client testimonial screenshot" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <!-- Navigation Arrows -->
+                <button class="nav-arrow absolute left-4 top-1/2 transform -translate-y-1/2 w-12 h-12 rounded-full shadow-lg flex items-center justify-center z-10" id="prevBtn">
+                    <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                    </svg>
+                </button>
+                <button class="nav-arrow absolute right-4 top-1/2 transform -translate-y-1/2 w-12 h-12 rounded-full shadow-lg flex items-center justify-center z-10" id="nextBtn">
+                    <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Dots Navigation -->
+            <div class="flex justify-center mt-8 space-x-3" id="dotsContainer">
+                <!-- Dots will be generated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+      <!-- Trust Indicators -->
+      <div class="mt-16 text-center">
+        <div class="glass-effect rounded-2xl p-8 inline-block">
+          <div class="flex items-center justify-center gap-8 flex-wrap">
+            <div class="flex items-center gap-2">
+              <div
+                class="w-3 h-3 bg-green-400 rounded-full animate-pulse"
+              ></div>
+              <span class="text-white/80">1,247+ Reviews</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div
+                class="w-3 h-3 bg-yellow-400 rounded-full animate-pulse"
+              ></div>
+              <span class="text-white/80">4.9/5 Rating</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="w-3 h-3 bg-blue-400 rounded-full animate-pulse"></div>
+              <span class="text-white/80">Trusted by 1000+</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="py-20 px-4 md:px-8 text-center">
+      <div class="max-w-4xl mx-auto">
+        <h2
+          class="text-4xl md:text-5xl lg:text-6xl font-black mb-6 gradient-text"
+        >
+          Ready to Trade?
+        </h2>
+        <p class="text-xl md:text-2xl text-white/70 mb-12 leading-relaxed">
+          Join the elite circle of crypto traders. Fast execution, fair prices,
+          and unmatched reliability. Your financial future starts with one
+          message.
+        </p>
+
+        <div
+          class="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12"
+        >
+          <a
+            href="https://wa.me/2349018177766" target="_blank"
+            class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-green-600 to-green-800 rounded-full text-xl font-semibold hover-glow transition-all duration-300 shimmer-effect"
+          >
+            <span class="text-2xl">🚀</span>
+            <span>Start Trading Now</span>
+          </a>
+
+          <a
+            href="https://x.com/Mayor_Wizzy_001" target="_blank"
+            class="inline-flex items-center gap-3 px-8 py-4 glass-effect rounded-full text-xl font-semibold hover-glow transition-all duration-300"
+          >
+            <span class="text-2xl">💼</span>
+            <span>Twitter (X)</span>
+          </a>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="grid grid-cols-3 gap-8 max-w-2xl mx-auto">
+          <div class="text-center">
+            <div class="text-2xl font-bold text-blue-400">< 2min</div>
+            <div class="text-white/60 text-sm">Response Time</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-green-400">100%</div>
+            <div class="text-white/60 text-sm">Secure</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-purple-400">24/7</div>
+            <div class="text-white/60 text-sm">Available</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-8 px-4 border-t border-white/10 text-center">
+      <div class="max-w-4xl mx-auto">
+        <p class="text-white/50 mb-4">
+          &copy; 2025 Mayor Wizzy. Elite crypto trading services. Trade
+          responsibly.
+        </p>
+        <div class="flex justify-center gap-6 text-sm text-white/40">
+          <span>🔒 SSL Secured</span>
+          <span>⚡ Instant Execution</span>
+          <span>💎 Premium Service</span>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Custom Cursor
+      const cursor = document.getElementById("cursor");
+      let mouseX = 0,
+        mouseY = 0;
+
+      document.addEventListener("mousemove", (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+      });
+
+      function updateCursor() {
+        cursor.style.left = mouseX - 10 + "px";
+        cursor.style.top = mouseY - 10 + "px";
+        requestAnimationFrame(updateCursor);
+      }
+      updateCursor();
+
+      // 3D Background with Three.js
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      const renderer = new THREE.WebGLRenderer({
+        canvas: document.getElementById("bg-canvas"),
+        alpha: true,
+      });
+
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(window.devicePixelRatio);
+
+      // Create floating particles
+      const geometry = new THREE.BufferGeometry();
+      const particles = 1000;
+      const positions = new Float32Array(particles * 3);
+
+      for (let i = 0; i < particles * 3; i++) {
+        positions[i] = (Math.random() - 0.5) * 100;
+      }
+
+      geometry.setAttribute(
+        "position",
+        new THREE.BufferAttribute(positions, 3)
+      );
+
+      const material = new THREE.PointsMaterial({
+        color: 0x60a5fa,
+        size: 0.5,
+        transparent: true,
+        opacity: 0.6,
+      });
+
+      const points = new THREE.Points(geometry, material);
+      scene.add(points);
+
+      camera.position.z = 30;
+
+      function animate() {
+        requestAnimationFrame(animate);
+        points.rotation.x += 0.001;
+        points.rotation.y += 0.002;
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      // Resize handler
+      window.addEventListener("resize", () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      // Scroll Progress
+      window.addEventListener("scroll", () => {
+        const scrollProgress = document.getElementById("scroll-progress");
+        const scrollPercent =
+          (window.scrollY / (document.body.scrollHeight - window.innerHeight)) *
+          100;
+        scrollProgress.style.width = scrollPercent + "%";
+      });
+
+      // Counter Animation
+      function animateCounters() {
+        const counters = document.querySelectorAll(".counter");
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              const target = parseInt(entry.target.dataset.target);
+              let current = 0;
+              const increment = target / 50;
+
+              const timer = setInterval(() => {
+                current += increment;
+                entry.target.textContent = Math.ceil(current);
+
+                if (current >= target) {
+                  entry.target.textContent = target;
+                  clearInterval(timer);
+                }
+              }, 40);
+
+              observer.unobserve(entry.target);
+            }
+          });
+        });
+
+        counters.forEach((counter) => observer.observe(counter));
+      }
+
+      animateCounters();
+
+      // Parallax Effect
+      window.addEventListener("scroll", () => {
+        const scrolled = window.pageYOffset;
+        const parallax = document.querySelector(".parallax");
+        if (parallax) {
+          parallax.style.transform = `translateY(${scrolled * 0.5}px)`;
+        }
+      });
+
+      // Testimonial Card 3D Effect
+      document.querySelectorAll(".testimonial-card").forEach((card) => {
+        card.addEventListener("mousemove", (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+
+          const rotateX = (y - centerY) / 10;
+          const rotateY = (centerX - x) / 10;
+
+          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(20px)`;
+        });
+
+        card.addEventListener("mouseleave", () => {
+          card.style.transform =
+            "perspective(1000px) rotateX(0) rotateY(0) translateZ(0)";
+        });
+      });
+
+      // Loading animation delay for elements
+      window.addEventListener("load", () => {
+        document
+          .querySelectorAll(".animate-slide-up, .animate-fade-in")
+          .forEach((el, index) => {
+            el.style.animationDelay = `${index * 0.2}s`;
+          });
+      });
+       class TestimonialSlider {
+            constructor() {
+                this.slider = document.getElementById('sliderTrack');
+                this.prevBtn = document.getElementById('prevBtn');
+                this.nextBtn = document.getElementById('nextBtn');
+                this.dotsContainer = document.getElementById('dotsContainer');
+                this.slides = document.querySelectorAll('.slide');
+                
+                this.currentIndex = 0;
+                this.slidesPerView = this.getSlidesPerView();
+                this.totalSlides = this.slides.length;
+                this.maxIndex = Math.max(0, this.totalSlides - this.slidesPerView);
+                
+                this.autoPlayInterval = null;
+                this.autoPlayDelay = 4000;
+                
+                this.touchStartX = 0;
+                this.touchEndX = 0;
+                
+                this.init();
+            }
+            
+            getSlidesPerView() {
+                if (window.innerWidth >= 1024) return 3;
+                if (window.innerWidth >= 768) return 2;
+                return 1;
+            }
+            
+            init() {
+                this.createDots();
+                this.updateSlider();
+                this.addEventListeners();
+                this.startAutoPlay();
+            }
+            
+            createDots() {
+                this.dotsContainer.innerHTML = '';
+                const totalDots = this.maxIndex + 1;
+                
+                for (let i = 0; i <= this.maxIndex; i++) {
+                    const dot = document.createElement('button');
+                    dot.className = 'nav-dot w-3 h-3 rounded-full bg-gray-300';
+                    dot.addEventListener('click', () => this.goToSlide(i));
+                    this.dotsContainer.appendChild(dot);
+                }
+            }
+            
+            updateSlider() {
+                const translateX = -(this.currentIndex * (100 / this.slidesPerView));
+                this.slider.style.transform = `translateX(${translateX}%)`;
+                this.updateDots();
+            }
+            
+            updateDots() {
+                const dots = this.dotsContainer.querySelectorAll('.nav-dot');
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === this.currentIndex);
+                });
+            }
+            
+            nextSlide() {
+                this.currentIndex = this.currentIndex >= this.maxIndex ? 0 : this.currentIndex + 1;
+                this.updateSlider();
+                this.resetAutoPlay();
+            }
+            
+            prevSlide() {
+                this.currentIndex = this.currentIndex <= 0 ? this.maxIndex : this.currentIndex - 1;
+                this.updateSlider();
+                this.resetAutoPlay();
+            }
+            
+            goToSlide(index) {
+                this.currentIndex = Math.max(0, Math.min(index, this.maxIndex));
+                this.updateSlider();
+                this.resetAutoPlay();
+            }
+            
+            startAutoPlay() {
+                this.autoPlayInterval = setInterval(() => {
+                    this.nextSlide();
+                }, this.autoPlayDelay);
+            }
+            
+            stopAutoPlay() {
+                if (this.autoPlayInterval) {
+                    clearInterval(this.autoPlayInterval);
+                    this.autoPlayInterval = null;
+                }
+            }
+            
+            resetAutoPlay() {
+                this.stopAutoPlay();
+                this.startAutoPlay();
+            }
+            
+            handleTouchStart(e) {
+                this.touchStartX = e.touches[0].clientX;
+            }
+            
+            handleTouchEnd(e) {
+                this.touchEndX = e.changedTouches[0].clientX;
+                this.handleSwipe();
+            }
+            
+            handleSwipe() {
+                const swipeThreshold = 50;
+                const diff = this.touchStartX - this.touchEndX;
+                
+                if (Math.abs(diff) > swipeThreshold) {
+                    if (diff > 0) {
+                        this.nextSlide();
+                    } else {
+                        this.prevSlide();
+                    }
+                }
+            }
+            
+            handleResize() {
+                const newSlidesPerView = this.getSlidesPerView();
+                if (newSlidesPerView !== this.slidesPerView) {
+                    this.slidesPerView = newSlidesPerView;
+                    this.maxIndex = Math.max(0, this.totalSlides - this.slidesPerView);
+                    this.currentIndex = Math.min(this.currentIndex, this.maxIndex);
+                    this.createDots();
+                    this.updateSlider();
+                }
+            }
+            
+            addEventListeners() {
+                this.nextBtn.addEventListener('click', () => this.nextSlide());
+                this.prevBtn.addEventListener('click', () => this.prevSlide());
+                
+                // Touch events
+                this.slider.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
+                this.slider.addEventListener('touchend', (e) => this.handleTouchEnd(e), { passive: true });
+                
+                // Pause autoplay on hover
+                this.slider.addEventListener('mouseenter', () => this.stopAutoPlay());
+                this.slider.addEventListener('mouseleave', () => this.startAutoPlay());
+                
+                // Handle window resize
+                window.addEventListener('resize', () => this.handleResize());
+                
+                // Keyboard navigation
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'ArrowLeft') this.prevSlide();
+                    if (e.key === 'ArrowRight') this.nextSlide();
+                });
+            }
+        }
+        
+        // Initialize slider when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new TestimonialSlider();
+        });
+    </script>
+  </body>
+</html>
